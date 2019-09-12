@@ -8,14 +8,30 @@ class PostsController < ApplicationController
   end
 
   def new
+    @post = Post.new
   end
 
   def create
+    @post = Post.new(post_params)
+    @post.creator = User.first # TODO: Replace with logged in user one we have auth
+
+    if @post.save
+      flash[:notice] = 'Post created.'
+      redirect_to posts_path
+    else
+      render :new
+    end
   end
 
   def edit
   end
 
   def update
+  end
+
+  private
+
+  def post_params
+    params.require(:post).permit(:title, :url, :description)
   end
 end
